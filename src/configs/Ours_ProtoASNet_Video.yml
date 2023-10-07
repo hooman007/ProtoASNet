@@ -1,0 +1,91 @@
+################### Experiment information ######################
+description: end-to-end version of the XprotoNet-based model
+run_name: "Ours_ProtoASNet_Video"
+agent: "Video_XProtoNet_e2e"
+CUDA_VISIBLE_DEVICES: "0"
+wandb_mode: 'online'  # one of "online", "offline" or "disabled". disabled turns wandb logging off! good for testing
+abstain_class: True
+
+################## Model information ##########################
+model: &model
+  checkpoint_path: ''
+  name: "Video_XProtoNet"
+  base_architecture: 'resnet2p1d_18'  # backbone
+  backbone_last_layer_num: -3
+  pretrained: True
+  prototype_shape: (40, 256, 1, 1, 1)  # Modify first element to select total # of prototypes (dividable by num_classes)
+  num_classes: 4
+################## Training information ##########################
+train: &train
+  seed: 200
+  num_train_epochs: 51
+  save: True
+  save_step: null
+  num_warm_epochs: 5
+  batch_size: 5
+  accumulation_steps: 20
+  push_start: 10
+  push_rate: 5 # epochs
+  num_workers: 10
+
+  criterion:
+    CeLoss:  # will be used if (abstain_class == False)
+      loss_weight: 1
+      reduction: 'mean'
+    CeLossAbstain:  # will be used if (abstain_class == True)
+        loss_weight: 1
+        ab_weight: 0.3
+        ab_logitpath: 'joined'
+        reduction: 'mean'
+    ClusterRoiFeat:
+      loss_weight: 0.8
+      reduction: 'mean'
+    SeparationRoiFeat:
+      loss_weight: 0.08
+      reduction: 'mean'
+    OrthogonalityLoss:
+      loss_weight: 0.0
+      mode: 'per_class'  # to encourage diversity in each class ('per_class'), or overal ('all')
+    Lnorm_occurrence:
+      p: 2
+      loss_weight: 0.0 # 1e-4
+      reduction: 'mean'
+    trans_occurrence:
+      loss_weight: 0.001 # 1e-4
+      reduction: 'mean'
+    Lnorm_FC:
+      p: 1
+      loss_weight: 0.0001 # 1e-4
+
+  optimizer: &optimizer
+    name: 'Adam'
+    mode: 'lr_same'  # can be lr_same/lr_disjoint
+    lr_same: 0.0001  # 1e-4
+
+  lr_schedule: &lr_schedule   # for joint_optimizer only
+    name: 'ReduceLROnPlateau'
+    mode: 'max'  # used for F1 score
+    factor: 0.5  # Factor by which the learning rate will be reduced
+    patience: 5 # Number of epochs with no improvement after which learning rate will be reduced
+    threshold: 0.0001  # Threshold for measuring the new optimum, to only focus on significant changes
+    cooldown: 2
+    min_lr: 0.000001  # 1e-6
+    verbose: True
+#################### Data information #######################
+data: &data   #TODO modify this according to your dataset class and dataloder needs
+  name: "<dataset name>"
+  data_info_file: 'data/<dataset name>/<dataset-csv-info>.csv'
+  sample_size: null
+  sampler: 'AS'  # one of 'AS', 'random', 'bicuspid', 'AVA'
+  view: "all",  # one of  psax, plax, all
+
+  augmentation: True
+  transform_rotate_degrees: 15
+  transform_min_crop_ratio: 0.7
+  transform_time_dilation: 0.2
+  normalize: True
+  img_size: 112
+  frames: 32  # 1 for image-based, 2 or more for video-based
+  iterate_intervals: True # true if we get multiple images/videos in sequence during inference
+  interval_unit: 'cycle' # image/second/cycle
+  interval_quant: 1.0
