@@ -135,8 +135,10 @@ When training is done for the first time, pretrained backbone models are saved h
 
 --------------------------------------------------------------------------------------------------------
 ## Acknowledgement
+
 Some code is borrowed from [ProtoPNet](https://github.com/cfchen-duke/ProtoPNet), 
 and we developed XprotoNet architecture based on their [paper](https://arxiv.org/abs/2103.10663), 
+
 --------------------------------------------------------------------------------------------------------
 
 ## Citation
