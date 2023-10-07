@@ -11,10 +11,10 @@ Official repository for the paper:
 --------------------------------------------------------------------------------------------------------
 ## Contents
 - [Introduction](#Introduction)
-- [Environment Setup](#Environment Setup)
-- [Train and Test](#Train and Test)
-- [Local Explanation](#Local Explanation)
-- [Description of Files and Folders](#Description of Files and Folders)
+- [Environment Setup](#Environment-Setup)
+- [Train and Test](#Train-and-Test)
+- [Local Explanation](#Local-Explanation)
+- [Description of Files and Folders](#Description-of-Files-and-Folders)
 - [Acknowledgement](#Acknowledgement)
 - [Citation](#Citation)
 
