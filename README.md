@@ -36,7 +36,7 @@ We also experimentd on the [TMED-2 public dataset](https://tmed.cs.tufts.edu/tme
 git clone https://github.com/hooman007/ProtoASNet.git
 cd ProtoASNet
 ```
-2. place your data in the `data` folder.
+2. place your data in the `data` folder. For TMED or your private dataset, you need to prepare your own dataset class. The existing code in `src/data/` may be useful for your reference.  
 
 3. If using Docker, it can be setup by running `docker_setup.sh` on your server. Change the parameters according to your needs:
    1. the name of the container `--name=your_container_name`  \
@@ -60,7 +60,7 @@ python -c "import torch; print(torch.version.cuda)"
 
 To train the model `cd` to the project folder, then use the command `python main.py` with the arguments described below:
 
-- `--config_path="src/configs/<config-name>.yml"`: yaml file containing hyper-parameters for model, experiment, loss objectives, dataset, and augmentations. all are stored in `src/configs`
+- `--config_path="src/configs/<config-name>.yml"`: yaml file containing hyper-parameters for model, experiment, loss objectives, **dataset**, and augmentations. all are stored in `src/configs`
 - `--run_name="<your run name>"`: the name used by wandb to show the training results.
 - `--save_dir="logs/<path-to-save>"` the folder to save all the trained model checkpoints, evaluations, and visualization of learned prototypes
 - `--eval_only=True` a flag that evaluates the trained model
