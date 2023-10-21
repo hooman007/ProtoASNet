@@ -1,4 +1,3 @@
-from src.models.DenseNet import DenseNet
 from src.models.ProtoPNet import construct_PPNet
 from src.models.XProtoNet import construct_XProtoNet
 from src.models.Video_XProtoNet import construct_Video_XProtoNet
@@ -6,7 +5,6 @@ from copy import deepcopy
 import logging
 
 MODELS = {
-    "DenseNet": DenseNet,
     "ProtoPNet": construct_PPNet,
     "XProtoNet": construct_XProtoNet,
     "Video_XProtoNet": construct_Video_XProtoNet,
